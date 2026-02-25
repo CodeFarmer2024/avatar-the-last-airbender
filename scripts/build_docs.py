@@ -160,9 +160,9 @@ def indent_lines(lines: List[str], spaces: int = 4) -> List[str]:
 def render_script_block(text: str) -> List[str]:
     escaped = html.escape(text)
     return [
-        '<div class="script">',
+        '<pre class="script">',
         escaped,
-        "</div>",
+        "</pre>",
         "",
     ]
 
@@ -191,16 +191,9 @@ def write_episode_md(num: int, en_text: str, zh_text: str) -> str:
     langs_label = " / ".join(langs) if langs else "N/A"
 
     lines = [f"# {title}", "", f"**Languages:** {langs_label}", ""]
-    if en_text and zh_text:
-        lines += ['=== "English"', ""] + indent_lines(
-            render_script_block(en_text)
-        )
-        lines += ['=== "中文"', ""] + indent_lines(
-            render_script_block(zh_text)
-        )
-    elif en_text:
+    if en_text:
         lines += ["## English", ""] + render_script_block(en_text)
-    elif zh_text:
+    if zh_text:
         lines += ["## 中文", ""] + render_script_block(zh_text)
     else:
         lines += ["_No script content available._", ""]
@@ -251,23 +244,12 @@ def write_mkdocs(season_nums: Dict[int, List[int]]):
         f'site_name: "{SITE_NAME}"',
         f"site_url: {SITE_URL}",
         f"repo_url: {REPO_URL}",
-        "theme:",
-        "  name: material",
-        "  features:",
-        "    - navigation.tabs",
-        "    - navigation.sections",
-        "    - navigation.expand",
+        "theme: readthedocs",
         "docs_dir: docs",
         "site_dir: site",
         "use_directory_urls: false",
         "extra_css:",
         "  - styles.css",
-        "markdown_extensions:",
-        "  - admonition",
-        "  - pymdownx.details",
-        "  - pymdownx.superfences",
-        "  - pymdownx.tabbed:",
-        "      alternate_style: true",
         "nav:",
         "  - Home: index.md",
     ]

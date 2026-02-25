@@ -5,7 +5,7 @@
   --script-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
 }
 
-.script {
+pre.script {
   white-space: pre-wrap;
   background: var(--script-bg);
   border: 1px solid var(--script-border);
@@ -19,7 +19,7 @@
 }
 
 @media (max-width: 800px) {
-  .script {
+  pre.script {
     font-size: 14px;
     padding: 14px 16px;
   }
