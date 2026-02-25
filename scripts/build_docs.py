@@ -171,16 +171,20 @@ def render_two_column(en_text: str, zh_text: str) -> List[str]:
     en_block = "\n".join(render_script_block(en_text)).strip()
     zh_block = "\n".join(render_script_block(zh_text)).strip()
     return [
-        '<div class="script-grid">',
-        '  <div class="script-col">',
-        '    <div class="script-col-title">English</div>',
-        f"    {en_block}",
-        "  </div>",
-        '  <div class="script-col">',
-        '    <div class="script-col-title">中文</div>',
-        f"    {zh_block}",
-        "  </div>",
-        "</div>",
+        '<table class="script-table">',
+        "  <thead>",
+        "    <tr>",
+        "      <th>English</th>",
+        "      <th>中文</th>",
+        "    </tr>",
+        "  </thead>",
+        "  <tbody>",
+        "    <tr>",
+        f"      <td>{en_block}</td>",
+        f"      <td>{zh_block}</td>",
+        "    </tr>",
+        "  </tbody>",
+        "</table>",
         "",
     ]
 
