@@ -1,0 +1,56 @@
+:root {
+  --script-bg: #f8f6f1;
+  --script-border: #e2ddd2;
+  --script-text: #2a2a2a;
+  --script-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+
+pre.script {
+  white-space: pre-wrap;
+  background: var(--script-bg);
+  border: 1px solid var(--script-border);
+  box-shadow: var(--script-shadow);
+  color: var(--script-text);
+  padding: 16px 18px;
+  border-radius: 10px;
+  line-height: 1.7;
+  font-size: 15px;
+  font-family: "Iowan Old Style", "Palatino", "Georgia", "Times New Roman", serif;
+}
+
+.script-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 18px 0;
+  margin: 18px 0 8px;
+  table-layout: fixed;
+}
+
+.script-table th {
+  text-align: left;
+  font-weight: 600;
+  color: #4b463f;
+  padding: 0 0 8px;
+}
+
+.script-table td {
+  vertical-align: top;
+}
+
+@media (max-width: 800px) {
+  pre.script {
+    font-size: 14px;
+    padding: 14px 16px;
+  }
+  .script-table,
+  .script-table thead,
+  .script-table tbody,
+  .script-table tr,
+  .script-table th,
+  .script-table td {
+    display: block;
+  }
+  .script-table th {
+    padding-top: 12px;
+  }
+}
