@@ -1,0 +1,24 @@
+:root {
+  --script-bg: #f8f6f1;
+  --script-border: #e2ddd2;
+  --script-text: #2a2a2a;
+}
+
+.script {
+  white-space: pre-wrap;
+  background: var(--script-bg);
+  border: 1px solid var(--script-border);
+  color: var(--script-text);
+  padding: 16px 18px;
+  border-radius: 10px;
+  line-height: 1.7;
+  font-size: 15px;
+  font-family: "Iowan Old Style", "Palatino", "Georgia", "Times New Roman", serif;
+}
+
+@media (max-width: 800px) {
+  .script {
+    font-size: 14px;
+    padding: 14px 16px;
+  }
+}

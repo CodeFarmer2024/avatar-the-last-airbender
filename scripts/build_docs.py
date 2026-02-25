@@ -2,6 +2,7 @@
 import re
 import subprocess
 import shutil
+import html
 from pathlib import Path
 from typing import List, Tuple, Dict
 
@@ -50,7 +51,18 @@ def normalize_block(text: str) -> str:
         lines.pop(0)
     while lines and lines[-1].strip() == "":
         lines.pop()
-    return "\n".join(lines)
+    # Collapse consecutive blank lines to a single blank line
+    compact = []
+    blank = False
+    for ln in lines:
+        if ln.strip() == "":
+            if not blank:
+                compact.append("")
+            blank = True
+        else:
+            compact.append(ln)
+            blank = False
+    return "\n".join(compact)
 
 
 def find_title(text: str) -> str:
@@ -141,6 +153,16 @@ def episode_slug(num: int) -> str:
     return f"s{season:02d}e{ep:02d}"
 
 
+def render_script_block(text: str) -> List[str]:
+    escaped = html.escape(text)
+    return [
+        '<div class="script">',
+        escaped,
+        "</div>",
+        "",
+    ]
+
+
 def write_episode_md(num: int, en_text: str, zh_text: str):
     season, ep = season_episode(num)
     season_dir = DOCS_DIR / f"season-{season:02d}"
@@ -153,9 +175,9 @@ def write_episode_md(num: int, en_text: str, zh_text: str):
 
     lines = [f"# {title}", ""]
     if en_text:
-        lines += ["## English", "", "```text", en_text, "```", ""]
+        lines += ["## English", ""] + render_script_block(en_text)
     if zh_text:
-        lines += ["## 中文", "", "```text", zh_text, "```", ""]
+        lines += ["## 中文", ""] + render_script_block(zh_text)
 
     path = season_dir / f"{episode_slug(num)}.md"
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
@@ -179,6 +201,27 @@ def write_indexes(season_nums: Dict[int, List[int]]):
         (season_dir / "index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_mkdocs(season_nums: Dict[int, List[int]]):
+    lines = [
+        'site_name: "Avatar: The Last Airbender Scripts"',
+        "theme: readthedocs",
+        "docs_dir: docs",
+        "site_dir: site",
+        "use_directory_urls: false",
+        "extra_css:",
+        "  - styles.css",
+        "nav:",
+        "  - Home: index.md",
+    ]
+    for season in sorted(season_nums.keys()):
+        lines.append(f"  - Season {season}:")
+        lines.append(f"      - Index: season-{season:02d}/index.md")
+        for num in season_nums[season]:
+            slug = episode_slug(num)
+            lines.append(f"      - {slug.upper()}: season-{season:02d}/{slug}.md")
+    (ROOT / "mkdocs.yml").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def main():
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     en = load_english()
@@ -197,6 +240,7 @@ def main():
     for season in season_nums:
         season_nums[season] = sorted(season_nums[season])
     write_indexes(season_nums)
+    write_mkdocs(season_nums)
 
 
 if __name__ == "__main__":

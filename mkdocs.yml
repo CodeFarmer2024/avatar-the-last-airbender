@@ -1,18 +1,76 @@
 site_name: "Avatar: The Last Airbender Scripts"
-site_description: Scripts organized by season and episode
-site_author: kingsonwu
-
-repo_name: avatar_the_last_airbender_script
-
-theme:
-  name: readthedocs
-
+theme: readthedocs
 docs_dir: docs
 site_dir: site
 use_directory_urls: false
-
+extra_css:
+  - styles.css
 nav:
   - Home: index.md
-  - Season 1: season-01/index.md
-  - Season 2: season-02/index.md
-  - Season 3: season-03/index.md
+  - Season 1:
+      - Index: season-01/index.md
+      - S01E01: season-01/s01e01.md
+      - S01E02: season-01/s01e02.md
+      - S01E03: season-01/s01e03.md
+      - S01E04: season-01/s01e04.md
+      - S01E05: season-01/s01e05.md
+      - S01E06: season-01/s01e06.md
+      - S01E07: season-01/s01e07.md
+      - S01E08: season-01/s01e08.md
+      - S01E09: season-01/s01e09.md
+      - S01E10: season-01/s01e10.md
+      - S01E11: season-01/s01e11.md
+      - S01E12: season-01/s01e12.md
+      - S01E13: season-01/s01e13.md
+      - S01E14: season-01/s01e14.md
+      - S01E15: season-01/s01e15.md
+      - S01E16: season-01/s01e16.md
+      - S01E17: season-01/s01e17.md
+      - S01E18: season-01/s01e18.md
+      - S01E19: season-01/s01e19.md
+      - S01E20: season-01/s01e20.md
+  - Season 2:
+      - Index: season-02/index.md
+      - S02E01: season-02/s02e01.md
+      - S02E02: season-02/s02e02.md
+      - S02E03: season-02/s02e03.md
+      - S02E04: season-02/s02e04.md
+      - S02E05: season-02/s02e05.md
+      - S02E06: season-02/s02e06.md
+      - S02E07: season-02/s02e07.md
+      - S02E08: season-02/s02e08.md
+      - S02E09: season-02/s02e09.md
+      - S02E10: season-02/s02e10.md
+      - S02E11: season-02/s02e11.md
+      - S02E12: season-02/s02e12.md
+      - S02E13: season-02/s02e13.md
+      - S02E14: season-02/s02e14.md
+      - S02E15: season-02/s02e15.md
+      - S02E16: season-02/s02e16.md
+      - S02E17: season-02/s02e17.md
+      - S02E18: season-02/s02e18.md
+      - S02E19: season-02/s02e19.md
+      - S02E20: season-02/s02e20.md
+  - Season 3:
+      - Index: season-03/index.md
+      - S03E01: season-03/s03e01.md
+      - S03E02: season-03/s03e02.md
+      - S03E03: season-03/s03e03.md
+      - S03E04: season-03/s03e04.md
+      - S03E05: season-03/s03e05.md
+      - S03E06: season-03/s03e06.md
+      - S03E07: season-03/s03e07.md
+      - S03E08: season-03/s03e08.md
+      - S03E09: season-03/s03e09.md
+      - S03E10: season-03/s03e10.md
+      - S03E11: season-03/s03e11.md
+      - S03E12: season-03/s03e12.md
+      - S03E13: season-03/s03e13.md
+      - S03E14: season-03/s03e14.md
+      - S03E15: season-03/s03e15.md
+      - S03E16: season-03/s03e16.md
+      - S03E17: season-03/s03e17.md
+      - S03E18: season-03/s03e18.md
+      - S03E19: season-03/s03e19.md
+      - S03E20: season-03/s03e20.md
+      - S03E21: season-03/s03e21.md
