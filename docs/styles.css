@@ -18,9 +18,27 @@ pre.script {
   font-family: "Iowan Old Style", "Palatino", "Georgia", "Times New Roman", serif;
 }
 
+.script-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 18px 0 8px;
+}
+
+.script-col-title {
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #4b463f;
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 800px) {
   pre.script {
     font-size: 14px;
     padding: 14px 16px;
+  }
+
+  .script-grid {
+    grid-template-columns: 1fr;
   }
 }

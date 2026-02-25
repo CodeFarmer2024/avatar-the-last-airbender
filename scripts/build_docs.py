@@ -167,6 +167,24 @@ def render_script_block(text: str) -> List[str]:
     ]
 
 
+def render_two_column(en_text: str, zh_text: str) -> List[str]:
+    en_block = "\n".join(render_script_block(en_text)).strip()
+    zh_block = "\n".join(render_script_block(zh_text)).strip()
+    return [
+        '<div class="script-grid">',
+        '  <div class="script-col">',
+        '    <div class="script-col-title">English</div>',
+        f"    {en_block}",
+        "  </div>",
+        '  <div class="script-col">',
+        '    <div class="script-col-title">中文</div>',
+        f"    {zh_block}",
+        "  </div>",
+        "</div>",
+        "",
+    ]
+
+
 def build_episode_title(num: int, en_text: str) -> str:
     season, ep = season_episode(num)
     title = f"S{season:02d}E{ep:02d}"
@@ -191,12 +209,15 @@ def write_episode_md(num: int, en_text: str, zh_text: str) -> str:
     langs_label = " / ".join(langs) if langs else "N/A"
 
     lines = [f"# {title}", "", f"**Languages:** {langs_label}", ""]
-    if en_text:
-        lines += ["## English", ""] + render_script_block(en_text)
-    if zh_text:
-        lines += ["## 中文", ""] + render_script_block(zh_text)
+    if en_text and zh_text:
+        lines += render_two_column(en_text, zh_text)
     else:
-        lines += ["_No script content available._", ""]
+        if en_text:
+            lines += ["## English", ""] + render_script_block(en_text)
+        if zh_text:
+            lines += ["## 中文", ""] + render_script_block(zh_text)
+        if not en_text and not zh_text:
+            lines += ["_No script content available._", ""]
 
     path = season_dir / f"{episode_slug(num)}.md"
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
