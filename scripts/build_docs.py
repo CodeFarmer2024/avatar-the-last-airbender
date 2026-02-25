@@ -133,9 +133,10 @@ def load_chinese() -> Dict[int, str]:
         chunks = [normalize_block(c) for c in split_by_episode(text)]
         expected = list(range(start, end + 1))
         if len(chunks) != len(expected):
-            # Fallback: do not split, attach whole file to the first episode in range
-            out[start] = normalize_block(text)
-            continue
+            # If the file contains more/less episodes than the filename suggests,
+            # trust the actual split count and extend the range accordingly.
+            end = start + len(chunks) - 1
+            expected = list(range(start, end + 1))
         for num, chunk in zip(expected, chunks):
             out[num] = chunk
 
