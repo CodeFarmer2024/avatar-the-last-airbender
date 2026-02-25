@@ -1,0 +1,18 @@
+site_name: Avatar: The Last Airbender Scripts
+site_description: Scripts organized by season and episode
+site_author: kingsonwu
+
+repo_name: avatar_the_last_airbender_script
+
+theme:
+  name: readthedocs
+
+docs_dir: docs
+site_dir: site
+use_directory_urls: false
+
+nav:
+  - Home: index.md
+  - Season 1: season-01/index.md
+  - Season 2: season-02/index.md
+  - Season 3: season-03/index.md
