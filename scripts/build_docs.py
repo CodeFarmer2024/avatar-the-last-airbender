@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
 import subprocess
+import shutil
 from pathlib import Path
 from typing import List, Tuple, Dict
 
@@ -23,9 +24,20 @@ def read_text_file(path: Path) -> str:
 
 
 def read_doc_file(path: Path) -> str:
-    out = subprocess.check_output(
-        ["/usr/bin/textutil", "-convert", "txt", "-stdout", str(path)]
-    )
+    textutil = shutil.which("textutil")
+    antiword = shutil.which("antiword")
+
+    if textutil:
+        out = subprocess.check_output(
+            [textutil, "-convert", "txt", "-stdout", str(path)]
+        )
+    elif antiword:
+        out = subprocess.check_output([antiword, str(path)])
+    else:
+        raise FileNotFoundError(
+            "Missing converter. Install 'antiword' (Linux) or use macOS 'textutil'."
+        )
+
     text = out.decode("utf-8", errors="ignore")
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     return text.lstrip("\ufeff")

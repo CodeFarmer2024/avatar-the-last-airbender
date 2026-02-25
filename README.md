@@ -2,6 +2,8 @@
 
 将现有剧本文档按“季/集”生成电子书页面，并可发布到 GitHub Pages。
 
+站点地址：<https://codefarmer2024.github.io/avatar-the-last-airbender/>
+
 ## 本地生成
 
 1. 生成 Markdown 内容

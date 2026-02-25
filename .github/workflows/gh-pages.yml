@@ -30,6 +30,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install mkdocs
+      - name: Install antiword
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y antiword
 
       - name: Build Docs
         run: |
