@@ -44,7 +44,8 @@ def read_doc_file(path: Path) -> str:
 
 def normalize_block(text: str) -> str:
     # Trim trailing whitespace on each line and remove excessive leading/trailing blank lines
-    lines = [ln.rstrip() for ln in text.split("\n")]
+    text = text.replace("\t", "    ").replace("\x0c", "\n")
+    lines = [ln.rstrip().lstrip(" ") for ln in text.split("\n")]
     while lines and lines[0].strip() == "":
         lines.pop(0)
     while lines and lines[-1].strip() == "":
@@ -60,6 +61,13 @@ def normalize_block(text: str) -> str:
         else:
             compact.append(ln)
             blank = False
+    # Remove common leading indentation
+    non_empty = [ln for ln in compact if ln.strip() != ""]
+    if not non_empty:
+        return ""
+    min_indent = min(len(ln) - len(ln.lstrip(" ")) for ln in non_empty)
+    if min_indent > 0:
+        compact = [ln[min_indent:] if len(ln) >= min_indent else "" for ln in compact]
     return "\n".join(compact)
 
 
