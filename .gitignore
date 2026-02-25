@@ -1,6 +1,16 @@
+# OS / editor
 .DS_Store
+.idea/
+.vscode/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
 venv/
+
+# MkDocs build output
 site/
+
+# Misc
+*.log

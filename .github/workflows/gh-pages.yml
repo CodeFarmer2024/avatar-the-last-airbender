@@ -25,7 +25,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y antiword
           python -m pip install --upgrade pip
-          pip install mkdocs
+          pip install mkdocs mkdocs-material
 
       - name: Build docs
         run: |

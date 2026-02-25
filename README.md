@@ -1,32 +1,43 @@
-# Avatar: The Last Airbender Scripts
+# Avatar: The Last Airbender Scripts (EN/CN)
 
-将现有剧本文档按“季/集”生成电子书页面，并可发布到 GitHub Pages。
+[![Deploy MkDocs to GitHub Pages](https://github.com/CodeFarmer2024/avatar-the-last-airbender/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/CodeFarmer2024/avatar-the-last-airbender/actions/workflows/gh-pages.yml)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)](https://codefarmer2024.github.io/avatar-the-last-airbender/)
 
-站点地址：<https://codefarmer2024.github.io/avatar-the-last-airbender/>
+Bilingual (English/Chinese) Avatar: The Last Airbender scripts organized by season and episode.
 
-## 本地生成
+## Site
 
-1. 生成 Markdown 内容
+Live site: https://codefarmer2024.github.io/avatar-the-last-airbender/
+
+This project publishes a static site via GitHub Pages with one page per season and episode.
+
+Local preview:
 
 ```bash
+pip install mkdocs mkdocs-material
 python3 scripts/build_docs.py
-```
-
-2. 本地预览（需要安装 mkdocs）
-
-```bash
-pip install mkdocs
 mkdocs serve
 ```
 
-## GitHub Pages 发布
+Deploy (CI):
 
-- 已配置 `.github/workflows/gh-pages.yml`，推送到 `main` 或 `master` 分支后会自动构建并发布。
-- 需要在 GitHub 仓库设置中启用 Pages：
-  - `Settings` -> `Pages` -> `Build and deployment` 选择 `GitHub Actions`。
+```bash
+git push origin main
+```
 
-## 目录结构
+## Dependencies
 
-- `docs/`：生成后的电子书内容（按季/集）
-- `scripts/build_docs.py`：从中文 `.doc` 和英文 `.txt` 生成 Markdown
-- `mkdocs.yml`：站点配置
+- Linux CI uses `antiword` to read `.doc` files
+- macOS local build uses `textutil` (built-in)
+
+## Structure
+
+- `最后的气宗 英文剧本/` source English txt files
+- `最后的气宗 中文剧本/` source Chinese doc files
+- `docs/` generated markdown pages
+- `scripts/build_docs.py` build script
+- `mkdocs.yml` site config
+
+## License
+
+MIT

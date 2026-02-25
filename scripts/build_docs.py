@@ -11,11 +11,9 @@ EN_DIR = ROOT / "最后的气宗 英文剧本"
 ZH_DIR = ROOT / "最后的气宗 中文剧本"
 DOCS_DIR = ROOT / "docs"
 
-SEASONS = {
-    1: list(range(101, 121)),
-    2: list(range(201, 221)),
-    3: list(range(301, 322)),
-}
+SITE_NAME = "Avatar: The Last Airbender Scripts"
+SITE_URL = "https://codefarmer2024.github.io/avatar-the-last-airbender/"
+REPO_URL = "https://github.com/CodeFarmer2024/avatar-the-last-airbender"
 
 
 def read_text_file(path: Path) -> str:
@@ -153,6 +151,11 @@ def episode_slug(num: int) -> str:
     return f"s{season:02d}e{ep:02d}"
 
 
+def indent_lines(lines: List[str], spaces: int = 4) -> List[str]:
+    prefix = " " * spaces
+    return [prefix + ln if ln != "" else "" for ln in lines]
+
+
 def render_script_block(text: str) -> List[str]:
     escaped = html.escape(text)
     return [
@@ -163,31 +166,71 @@ def render_script_block(text: str) -> List[str]:
     ]
 
 
-def write_episode_md(num: int, en_text: str, zh_text: str):
+def build_episode_title(num: int, en_text: str) -> str:
     season, ep = season_episode(num)
+    title = f"S{season:02d}E{ep:02d}"
+    en_title = find_title(en_text) if en_text else ""
+    if en_title and en_title.lower() not in title.lower():
+        title = f"{title} - {en_title}"
+    return title
+
+
+def write_episode_md(num: int, en_text: str, zh_text: str) -> str:
+    season, _ = season_episode(num)
     season_dir = DOCS_DIR / f"season-{season:02d}"
     season_dir.mkdir(parents=True, exist_ok=True)
 
-    en_title = find_title(en_text) if en_text else ""
-    title = f"S{season:02d}E{ep:02d}"
-    if en_title and en_title.lower() not in title.lower():
-        title = f"{title} - {en_title}"
+    title = build_episode_title(num, en_text)
 
-    lines = [f"# {title}", ""]
+    langs = []
     if en_text:
-        lines += ["## English", ""] + render_script_block(en_text)
+        langs.append("English")
     if zh_text:
+        langs.append("中文")
+    langs_label = " / ".join(langs) if langs else "N/A"
+
+    lines = [f"# {title}", "", f"**Languages:** {langs_label}", ""]
+    if en_text and zh_text:
+        lines += ['=== "English"', ""] + indent_lines(
+            render_script_block(en_text)
+        )
+        lines += ['=== "中文"', ""] + indent_lines(
+            render_script_block(zh_text)
+        )
+    elif en_text:
+        lines += ["## English", ""] + render_script_block(en_text)
+    elif zh_text:
         lines += ["## 中文", ""] + render_script_block(zh_text)
+    else:
+        lines += ["_No script content available._", ""]
 
     path = season_dir / f"{episode_slug(num)}.md"
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    return title
 
 
-def write_indexes(season_nums: Dict[int, List[int]]):
+def write_indexes(
+    season_nums: Dict[int, List[int]],
+    titles: Dict[int, str],
+    missing_en: List[int],
+    missing_zh: List[int],
+):
     # Root index
-    idx = ["# Avatar: The Last Airbender Scripts", "", "按季/集整理的电子书版本。", ""]
+    idx = [f"# {SITE_NAME}", "", "按季/集整理的电子书版本。", ""]
     for season in sorted(season_nums.keys()):
         idx.append(f"- [Season {season}](season-{season:02d}/index.md)")
+    if missing_en or missing_zh:
+        idx += ["", "## Coverage", ""]
+        if missing_en:
+            idx.append(
+                "- Missing English: "
+                + ", ".join(episode_slug(n).upper() for n in missing_en)
+            )
+        if missing_zh:
+            idx.append(
+                "- Missing 中文: "
+                + ", ".join(episode_slug(n).upper() for n in missing_zh)
+            )
     (DOCS_DIR / "index.md").write_text("\n".join(idx) + "\n", encoding="utf-8")
 
     # Season indexes
@@ -197,19 +240,33 @@ def write_indexes(season_nums: Dict[int, List[int]]):
         lines = [f"# Season {season}", ""]
         for num in nums:
             slug = episode_slug(num)
-            lines.append(f"- [{slug.upper()}](./{slug}.md)")
+            title = titles.get(num, slug.upper())
+            lines.append(f"- [{title}](./{slug}.md)")
         (season_dir / "index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def write_mkdocs(season_nums: Dict[int, List[int]]):
     lines = [
-        'site_name: "Avatar: The Last Airbender Scripts"',
-        "theme: readthedocs",
+        f'site_name: "{SITE_NAME}"',
+        f"site_url: {SITE_URL}",
+        f"repo_url: {REPO_URL}",
+        "theme:",
+        "  name: material",
+        "  features:",
+        "    - navigation.tabs",
+        "    - navigation.sections",
+        "    - navigation.expand",
         "docs_dir: docs",
         "site_dir: site",
         "use_directory_urls: false",
         "extra_css:",
         "  - styles.css",
+        "markdown_extensions:",
+        "  - admonition",
+        "  - pymdownx.details",
+        "  - pymdownx.superfences",
+        "  - pymdownx.tabbed:",
+        "      alternate_style: true",
         "nav:",
         "  - Home: index.md",
     ]
@@ -229,17 +286,24 @@ def main():
 
     all_nums = sorted(set(en.keys()) | set(zh.keys()))
     season_nums: Dict[int, List[int]] = {1: [], 2: [], 3: []}
+    titles: Dict[int, str] = {}
+    missing_en = []
+    missing_zh = []
 
     for num in all_nums:
         season, _ = season_episode(num)
         if season not in season_nums:
             continue
         season_nums[season].append(num)
-        write_episode_md(num, en.get(num, ""), zh.get(num, ""))
+        titles[num] = write_episode_md(num, en.get(num, ""), zh.get(num, ""))
+        if num not in en:
+            missing_en.append(num)
+        if num not in zh:
+            missing_zh.append(num)
 
     for season in season_nums:
         season_nums[season] = sorted(season_nums[season])
-    write_indexes(season_nums)
+    write_indexes(season_nums, titles, missing_en, missing_zh)
     write_mkdocs(season_nums)
 
 
